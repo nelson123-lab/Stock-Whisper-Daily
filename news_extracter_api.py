@@ -11,7 +11,7 @@ import os
 
 def runner():
     today = (date.today())
-    api_key = '{}'
+    api_key = ''
 
     base_url = "https://newsapi.org/v2/everything?q={}&from={}&to={}&sortBy=popularity&apiKey={}&language=en"
     print(base_url)
@@ -20,7 +20,7 @@ def runner():
 
     df = pd.DataFrame(columns=['newsTitle', 'timestamp', 'url_source', 'content', 'source', 'author', 'urlToImage'])
 
-    url_extractor = base_url.format('Covid', start_date_value, end_date_value, api_key)
+    url_extractor = base_url.format('US Stock News', start_date_value, end_date_value, api_key)
     print(url_extractor)
     response = requests.get(url_extractor)
     d = response.json()
@@ -46,8 +46,12 @@ def runner():
         {'newsTitle': newsTitle, 'timestamp': timestamp, 'url_source': url_source, 'content': trimmed_part,
         'source': source, 'author': author, 'urlToImage': urlToImage})], ignore_index=True)
 
-    filename = str(uuid.uuid4())
-    output_file = "/home/ubuntu/{}.parquet".format(filename)
-    df1 = df.drop_duplicates()
-    df1.to_parquet(output_file)
-    return output_file
+    # filename = str(uuid.uuid4())
+    # output_file = "/home/ubuntu/{}.parquet".format(filename)
+    # df1 = df.drop_duplicates()
+    # df1.to_parquet(output_file)
+    # return output_file
+    return df
+
+df = runner()
+print(df)
