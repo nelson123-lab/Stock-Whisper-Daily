@@ -38,8 +38,8 @@ def runner():
         urlToImage = i['urlToImage']
         partial_content = i['content'] or ""
         
-        if len(partial_content) >= 400:
-            partial_content = partial_content[:399]
+        if len(partial_content) >= 1000:
+            partial_content = partial_content[:999]
         if '.' in partial_content:
             trimmed_part = partial_content[:partial_content.rindex('.')]
         else:
