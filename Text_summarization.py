@@ -31,3 +31,5 @@ def generate_summary(text):
         summary = response.choices[0].text.strip()
         output_chunks.append(summary)
     return " ".join(output_chunks)
+
+print(generate_summary("Still Reigning is a live performance DVD by the thrash metal band Slayer, released in 2004 through American Recordings. Filmed at the Augusta Civic Center on July 11, 2004, the performance showcases Reign in Blood (1986), Slayer's third studio album and its first to enter the Billboard 200."))
