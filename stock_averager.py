@@ -26,6 +26,16 @@ class StockPortfolio:
         lowest_price = min(self.stock_prices)
         return lowest_price
 
+    def investment(self, investment, current_price):
+        # Calculate the number of shares purchased with the investment
+        new_shares = investment / current_price
+        # Calculate the new total cost
+        new_total_cost = self.total_cost + investment
+        # Calculate the new total number of shares
+        new_total_shares = self.total_shares + new_shares
+        # Calculate the new average cost
+        new_average_cost = new_total_cost / new_total_shares
+        return new_shares, new_average_cost
 
 def main():
     portfolio = StockPortfolio()
@@ -46,18 +56,32 @@ def main():
     print(f"Average cost of your stock: ${portfolio.average_cost():.2f}")
     print(f"The lowest price of your stock: ${portfolio.share_pricing_overview():.2f}")
     
-    while True:
-        current_price = float(input("Enter the current stock price: "))
-        target_average = float(input("Enter the target average price: "))
-        needed_shares = portfolio.shares_needed_to_average_down(current_price, target_average)
-        if needed_shares > 0:
-            print(f"You need to buy at least {needed_shares:.2f} shares at ${current_price:.2f} to bring the average price below ${target_average:.2f} and this will cost ${(needed_shares*current_price):.2f}")
-        else:
-            print(f"Buying more shares at ${current_price:.2f} will not lower the average price to below ${target_average:.2f}")
-        
-        another_check = input("Do you want to check with another current price and target average? (yes/no): ")
-        if another_check.lower() != 'yes':
-            break
+    answer = input("How are you planning to average down ? (investment/ shares):")
+    if answer.lower() == "shares":
+        while True:
+            current_price = float(input("Enter the current stock price: "))
+            target_average = float(input("Enter the target average price: "))
+            needed_shares = portfolio.shares_needed_to_average_down(current_price, target_average)
+            if needed_shares > 0:
+                print(f"You need to buy at least {needed_shares:.2f} shares at ${current_price:.2f} to bring the average price below ${target_average:.2f} and this will cost ${(needed_shares*current_price):.2f}")
+            else:
+                print(f"Buying more shares at ${current_price:.2f} will not lower the average price to below ${target_average:.2f}")
+            
+            another_check = input("Do you want to check with another current price and target average? (yes/no): ")
+            if another_check.lower() != 'yes':
+                break
+    else:
+        while True:
+            print("To check for the investment amount")
+            current_price = float(input("Enter the current stock price: "))
+            investment = float(input("Enter the amount of money that you are planning to invest: "))
+            new_shares, new_average_cost = portfolio.investment(investment, current_price)
+
+            print(f"You can buy {new_shares:.2f} shares at ${current_price:.2f} to bring the average price to ${new_average_cost:.2f}")
+            
+            another_check = input("Do you want to check with another current price and target average? (yes/no): ")
+            if another_check.lower() != 'yes':
+                break
 
 if __name__ == "__main__":
     main()
@@ -77,6 +101,7 @@ NVDIA
 1 @ 100.96
 1 @ 101.02
 0.6 @ 99.67
+1 @ 97.58
 
 Micron Technology
 1 @ 134.79
