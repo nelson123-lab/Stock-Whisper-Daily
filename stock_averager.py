@@ -4,17 +4,22 @@ class StockPortfolio:
         self.stock_prices = []
         self.total_cost = 0
         self.total_shares = 0
+        self.profit_loss = 0
+        self.average_cost = 0
 
     def add_stock(self, shares, price):
         self.shares.append((shares, price))
         self.stock_prices.append(price)
         self.total_cost += shares * price
         self.total_shares += shares
-
-    def average_cost(self):
         if self.total_shares == 0:
-            return 0
-        return self.total_cost / self.total_shares
+            self.average_cost = 0
+        self.average_cost = self.total_cost / self.total_shares
+
+    # def average_cost(self):
+    #     if self.total_shares == 0:
+    #         return 0
+    #     return self.total_cost / self.total_shares
 
     def shares_needed_to_average_down(self, current_price, target_average):
         if current_price >= target_average:
@@ -25,6 +30,11 @@ class StockPortfolio:
     def share_pricing_overview(self):
         lowest_price = min(self.stock_prices)
         return lowest_price
+
+    def sell_stock(self, selling_price, no_of_stocks, average_price):
+        self.total_shares = self.total_shares - no_of_stocks
+        self.profit_loss = 
+
 
     def investment(self, investment, current_price):
         # Calculate the number of shares purchased with the investment
@@ -102,6 +112,7 @@ NVDIA
 1 @ 101.02
 0.6 @ 99.67
 1 @ 97.58
+-2 @ 105.65
 
 Micron Technology
 1 @ 134.79
