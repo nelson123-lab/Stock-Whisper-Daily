@@ -1,7 +1,8 @@
 class StockPortfolio:
     def __init__(self):
         self.shares = []
-        self.stock_prices = []
+        self.min_stock = float('inf')
+        self.max_stock = 0
         self.total_cost = 0
         self.total_shares = 0
         self.profit_loss = 0
@@ -9,17 +10,13 @@ class StockPortfolio:
 
     def add_stock(self, shares, price):
         self.shares.append((shares, price))
-        self.stock_prices.append(price)
         self.total_cost += shares * price
         self.total_shares += shares
+        self.min_stock = min(self.min_stock, price)
+        self.max_stock = max(self.max_stock, price)
         if self.total_shares == 0:
             self.average_cost = 0
         self.average_cost = self.total_cost / self.total_shares
-
-    # def average_cost(self):
-    #     if self.total_shares == 0:
-    #         return 0
-    #     return self.total_cost / self.total_shares
 
     def shares_needed_to_average_down(self, current_price, target_average):
         if current_price >= target_average:
@@ -27,13 +24,30 @@ class StockPortfolio:
         needed_shares = (self.total_cost - target_average * self.total_shares) / (target_average - current_price)
         return max(0, needed_shares)
 
-    def share_pricing_overview(self):
-        lowest_price = min(self.stock_prices)
-        return lowest_price
-
-    def sell_stock(self, selling_price, no_of_stocks, average_price):
-        self.total_shares = self.total_shares - no_of_stocks
-        self.profit_loss = 
+    def sell_stock(self, selling_price, no_of_stocks):
+        if no_of_stocks > self.total_shares:
+            raise ValueError("Cannot sell more shares than you own.")
+        
+        # Calculate profit or loss for the sold shares
+        profit_loss_for_sale = no_of_stocks * (selling_price - self.average_cost)
+        
+        # Update portfolio's total shares and total cost
+        self.total_shares -= no_of_stocks
+        self.total_cost -= no_of_stocks * self.average_cost
+        
+        # Update the portfolio's cumulative profit/loss
+        self.profit_loss += profit_loss_for_sale
+        
+        # Remaining value of the portfolio at the current selling price
+        remaining_value = self.total_shares * selling_price
+        
+        # Return the remaining number of shares, total profit/loss, remaining investment value, and profit/loss from this transaction
+        return {
+            "remaining_shares": self.total_shares,
+            "total_profit_loss": self.profit_loss,
+            "remaining_investment_value": remaining_value,
+            "transaction_profit_loss": profit_loss_for_sale
+        }
 
 
     def investment(self, investment, current_price):
@@ -49,7 +63,7 @@ class StockPortfolio:
 
 def main():
     portfolio = StockPortfolio()
-    
+    current_price = float(input("Enter the current stock price: "))
     # Read stock purchases from file
     filename = "stock_input.txt"
     with open(filename, 'r') as file:
@@ -61,15 +75,22 @@ def main():
         shares, price = purchase.split(" @ ")
         shares = float(shares)
         price = float(price)
-        portfolio.add_stock(shares, price)
+        if shares < 0:
+            portfolio.sell_stock(price, shares)
+        else:
+            portfolio.add_stock(shares, price)
     
-    print(f"Average cost of your stock: ${portfolio.average_cost():.2f}")
-    print(f"The lowest price of your stock: ${portfolio.share_pricing_overview():.2f}")
-    
+    print(f"Average cost of your stock: ${portfolio.average_cost:.2f}")
+    print(f"Total cost of your stock: ${portfolio.total_cost:.2f}")
+    print(f"Total number of shares: {portfolio.total_shares:.2f}")
+    print(f"Profit/Loss: ${portfolio.profit_loss:.2f}")
+    print(f"Shares: {portfolio.shares}")
+    print(f"Minimum stock price: ${portfolio.min_stock:.2f}")
+    print(f"Maximum stock price: ${portfolio.max_stock:.2f}")
+
     answer = input("How are you planning to average down ? (investment/ shares):")
     if answer.lower() == "shares":
         while True:
-            current_price = float(input("Enter the current stock price: "))
             target_average = float(input("Enter the target average price: "))
             needed_shares = portfolio.shares_needed_to_average_down(current_price, target_average)
             if needed_shares > 0:
@@ -83,7 +104,6 @@ def main():
     else:
         while True:
             print("To check for the investment amount")
-            current_price = float(input("Enter the current stock price: "))
             investment = float(input("Enter the amount of money that you are planning to invest: "))
             new_shares, new_average_cost = portfolio.investment(investment, current_price)
 
@@ -97,6 +117,8 @@ if __name__ == "__main__":
     main()
 
 """
+Examples
+
 NVDIA
 1 @ 128.59
 1 @ 126.46
