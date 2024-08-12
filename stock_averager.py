@@ -32,8 +32,8 @@ class StockPortfolio:
         profit_loss_for_sale = no_of_stocks * (selling_price - self.average_cost)
         
         # Update portfolio's total shares and total cost
-        self.total_shares -= no_of_stocks
-        self.total_cost -= no_of_stocks * self.average_cost
+        self.total_shares += no_of_stocks # when selling number of shares will be already with a negative value.
+        self.total_cost += no_of_stocks * self.average_cost
         
         # Update the portfolio's cumulative profit/loss
         self.profit_loss += profit_loss_for_sale
