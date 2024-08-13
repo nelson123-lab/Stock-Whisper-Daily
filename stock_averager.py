@@ -51,6 +51,31 @@ class StockPortfolio:
         # Calculate the new average cost
         new_average_cost = new_total_cost / new_total_shares
         return new_shares, new_average_cost
+    
+    # def calculate_break_even(self, transactions):
+    #     total_cost = 0
+    #     total_sales = 0
+    #     net_quantity = 0
+
+    #     for quantity, price in transactions:
+    #         if quantity > 0:
+    #             total_cost += quantity * price
+    #         else:
+    #             total_sales += abs(quantity) * price
+    #         net_quantity += quantity
+
+    #     if net_quantity == 0:
+    #         return None  # Avoid division by zero, no net position
+    #     else:
+    #         break_even_price = (total_cost - total_sales) / net_quantity
+    #         return break_even_price
+        
+    def calculate_break_even(self):
+        if self.total_shares == 0:
+            return "You don't currently have any stock left to sell."
+        else:
+            break_even_price = (self.total_cost - self.profit_loss) / self.total_shares
+            return break_even_price
 
 def main():
     portfolio = StockPortfolio()
@@ -80,6 +105,7 @@ def main():
     print(f"Shares: {portfolio.shares}")
     print(f"Minimum stock buy price: ${portfolio.min_stock:.2f}")
     print(f"Maximum stock buy price: ${portfolio.max_stock:.2f}")
+    print(f"Break Even point: ${portfolio.calculate_break_even():.2f}")
 
     answer = input("How are you planning to average down ? (investment/ shares):")
     if answer.lower() == "shares":
@@ -130,7 +156,6 @@ NVDIA
 0.6 @ 99.67
 1 @ 97.58
 -2 @ 105.65
--2 @ 109.94
 
 Micron Technology
 1 @ 134.79
