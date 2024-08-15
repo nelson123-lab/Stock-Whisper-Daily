@@ -72,7 +72,8 @@ class StockPortfolio:
         
     def calculate_break_even(self):
         if self.total_shares == 0:
-            return "You don't currently have any stock left to sell."
+            break_even_price = 0
+            return break_even_price
         else:
             break_even_price = (self.total_cost - self.profit_loss) / self.total_shares
             return break_even_price
@@ -156,6 +157,10 @@ NVDIA
 0.6 @ 99.67
 1 @ 97.58
 -2 @ 105.65
+-2 @ 109.94
+-8 @ 115.65
+1 @ 114.97
+-1 @ 118.5
 
 Micron Technology
 1 @ 134.79
